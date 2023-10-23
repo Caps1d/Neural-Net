@@ -1,29 +1,49 @@
 import numpy as np
 
-
-class Neuron:
-    weights = []
-    bias = 0
-
-    def __init__(self, weights: int, bias):
-        self.weights = weights
-        self.bias = bias
-
-    def output(self, input: int):
-        return np.dot(self.weights, input) + self.bias
+from activation import ReLU
 
 
-class Layer:
-    size = 0
-    neurons = []
+np.random.seed(0)
 
-    def __init__(self, n: int, weights, biases):
-        self.size = n
-        self.neurons = [Neuron(weights[i], biases[i]) for i in range(n)]
 
-    def output(self, input: int):
-        outputs = []
-        for i in range(len(self.neurons)):
-            outputs.append(self.neurons[i].output(input))
+class LayerDense:
+    def __init__(self, n_inputs: int, n_neurons: int):
+        # n_inputs x n_neurons = T(n_neurons x n_inputs)
+        # Hence we take care of transpose for the dot product
+        # 0.10 * to ensure we're between 0.1 and -.1
+        self.size = n_neurons
+        self.weights = 0.10 * np.random.randn(n_inputs, n_neurons)
+        self.biases = np.zeros((1, n_neurons))
 
-        return outputs
+    def forward(self, inputs: list):
+        self.output = np.dot(inputs, self.weights) + self.biases
+
+
+def main():
+    X = [
+        [1, 2, 3, 2.5],
+        [2.0, 5.0, -1.0, 2.0],
+        [-1.5, 2.7, 3.3, -0.8],
+    ]
+    layer1 = LayerDense(len(X[0]), 5)
+    layer2 = LayerDense(layer1.size, 2)
+    layer3 = LayerDense(layer2.size, 2)
+
+    activation = ReLU()
+
+    layer1.forward(X)
+    activation.forward(layer1.output)
+
+    layer2.forward(activation.output)
+    activation.forward(layer2.output)
+    print(activation.output)
+
+    layer3.forward(activation.output)
+    activation.forward(layer3.output)
+
+    print(activation.output)
+    pass
+
+
+if __name__ == "__main__":
+    main()
