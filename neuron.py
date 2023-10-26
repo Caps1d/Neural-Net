@@ -1,7 +1,7 @@
 import numpy as np
 
 from activation import ReLU, Softmax
-
+from loss import CategoricalCrossEntropy
 
 np.random.seed(0)
 
@@ -44,6 +44,12 @@ def main():
     print(layer2.output)
     print(layer3.output)
 
+    loss = CategoricalCrossEntropy()
+    # probs = [[0.7, 0.1, 0.2], [0.1, 0.5, 0.4], [0.02, 0.9, 0.08]]
+    # y_pred = [0.2, 0.5, 0.3]
+    y_pred = layer3.output
+    y_true = [0, 1, 0]
+    print(loss.calculate(y_pred, y_true))
     pass
 
 
