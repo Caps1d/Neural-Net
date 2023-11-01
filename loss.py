@@ -9,8 +9,10 @@ class Loss:
 
         # Accuracy setup
         preds = np.argmax(output, axis=1)
-        bools = [x == y for x, y in zip(preds, y)]
-        accuracy = np.mean(bools)
+        # The reason for using ternary here is because hypothetically we might be dealing with
+        # a list of labels rather than a np array with one-hot encoded values
+        class_targets = y if len(np.asarray(y).shape) == 1 else np.argmax(y, axis=1)
+        accuracy = np.mean(preds == class_targets)
         print(f"Accuracy: {accuracy}")
 
         return data_loss
