@@ -11,7 +11,7 @@ class Loss:
         preds = np.argmax(output, axis=1)
         bools = [x == y for x, y in zip(preds, y)]
         accuracy = np.mean(bools)
-        print(accuracy)
+        print(f"Accuracy: {accuracy}")
 
         return data_loss
 
@@ -30,4 +30,5 @@ class CategoricalCrossEntropy(Loss):
             correct_confidences = np.sum(y_pred_clipped * y_true, axis=1)
 
         neg_log_conf = -np.log(correct_confidences)
+
         return neg_log_conf
